@@ -220,5 +220,35 @@
         </div>
 
         <script src="./script.js"></script>
+        <script type="text/javascript" src="http://static.robotwebtools.org/EventEmitter2/current/eventemitt
+er2.min.js"></script>
+ <script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+        <script>
+          var ros = new ROSLIB.Ros({
+          url : 'ws://localhost:9090'
+          });
+ 
+          ros.on('connection', function() {
+            console.log('Connected to websocket server.');
+          });
+ 
+ 
+          var listener = new ROSLIB.Topic({
+          ros : ros,
+          name : '/skeleton_pos',
+          messageType : 'geometry_msgs/Twist'
+          });
+ 
+          listener.subscribe(function(message) {
+          console.log('Received message on ' + listener.name + ': ' + message.data);
+          let posX = message.linear.x;
+          let posY = message.linear.y;
+ 
+          let pointer = pointers[0];
+          pointer.down = true;
+          updatePointerMoveData(pointer, posX, posY);
+          });
+        </script>
+
     </body>
 </html>
