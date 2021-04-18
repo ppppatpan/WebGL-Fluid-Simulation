@@ -223,6 +223,11 @@
         <script type="text/javascript" src="http://static.robotwebtools.org/EventEmitter2/current/eventemitt
 er2.min.js"></script>
  <script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+        <!-- NEW ADDITIONS -->
+        <script type="text/javascript" src="js/jquery/jquery-latest.js"></script>
+        <script type="text/javascript" src="js/ros/ros.js"></script>
+        <script type="text/javascript" src="js/ros/common.js"></script>
+        <!-- END OF NEW ADDITIONS! -->
         <script>
           var ros = new ROSLIB.Ros({
           url : 'ws://localhost:9090'
@@ -235,18 +240,30 @@ er2.min.js"></script>
  
           var listener = new ROSLIB.Topic({
           ros : ros,
-          name : '/skeleton_pos',
+          name : '/skeleton_pos/filtered',
           messageType : 'geometry_msgs/Twist'
           });
  
           listener.subscribe(function(message) {
           console.log('Received message on ' + listener.name + ': ' + message.data);
-          let posX = message.linear.x;
-          let posY = message.linear.y;
+          let posX = canvas.clientWidth * message.linear.x;
+          let posY = canvas.clientHeight * message.linear.y;
+          //getResolution()
  
-          let pointer = pointers[0];
-          pointer.down = true;
-          updatePointerMoveData(pointer, posX, posY);
+          //let pointer = pointers[0];
+          if (message.angular.y === 0) {
+            let pointer = pointers.find(p => p.id == -1);
+            if (pointer == null)
+            pointer = new pointerPrototype();
+            updatePointerDownData(pointer, -1, posX, posY);
+          }
+          if (message.angular.y === 1) {
+              let pointer = pointers[0];
+              updatePointerMoveData(pointer, posX, posY);
+          } 
+          if (message.angular.z === 2) updatePointerUpData(pointer);
+          //updatePointerMoveData(pointer, posX, posY);
+          console.log('Number of pointers: ' + pointers.size)
           });
         </script>
 

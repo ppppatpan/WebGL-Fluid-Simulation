@@ -1196,6 +1196,7 @@ function calcDeltaTime () {
 function resizeCanvas () {
     let width = scaleByPixelRatio(canvas.clientWidth);
     let height = scaleByPixelRatio(canvas.clientHeight);
+
     if (canvas.width != width || canvas.height != height) {
         canvas.width = width;
         canvas.height = height;
@@ -1467,7 +1468,8 @@ canvas.addEventListener('mousedown', e => {
     let pointer = pointers.find(p => p.id == -1);
     if (pointer == null)
         pointer = new pointerPrototype();
-    updatePointerDownData(pointer, -1, posX, posY);
+    //updatePointerDownData(pointer, -1, posX, posY);
+    console.log('mousedown found');
 });
 
 canvas.addEventListener('mousemove', e => {
@@ -1475,11 +1477,13 @@ canvas.addEventListener('mousemove', e => {
     if (!pointer.down) return;
     let posX = scaleByPixelRatio(e.offsetX);
     let posY = scaleByPixelRatio(e.offsetY);
-    updatePointerMoveData(pointer, posX, posY);
+    //updatePointerMoveData(pointer, posX, posY);
+    console.log('mousedown moving');
 });
 
 window.addEventListener('mouseup', () => {
-    updatePointerUpData(pointers[0]);
+    //updatePointerUpData(pointers[0]);
+    console.log('mouse up!');
 });
 
 canvas.addEventListener('touchstart', e => {
